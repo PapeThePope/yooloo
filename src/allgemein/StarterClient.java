@@ -7,6 +7,7 @@ package allgemein;
 import client.YoolooClient;
 import java.util.Scanner;
 
+
 public class StarterClient {
 	public static void main(String[] args) {
 		System.out.println("Spieleclient von Yooloo GRP 1 wird gestartet...");
