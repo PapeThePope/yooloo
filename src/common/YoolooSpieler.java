@@ -27,9 +27,9 @@ public class YoolooSpieler implements Serializable {
 
 	// Sortierung wird zufuellig ermittelt
 	public void sortierungFestlegen() {
+		System.out.println(this.name + " du bist dran eine Strategie auszuwählen!");
 		YoolooKarte[] neueSortierung = new YoolooKarte[this.aktuelleSortierung.length];
 		int r = (int) (Math.random() * (3 - 1)) + 1;
-		System.out.println(r);
 		switch(r){
 			case 1:
 				for (int i = 0; i < neueSortierung.length; i++) {

@@ -18,6 +18,7 @@ import common.YoolooStich;
 import messages.ClientMessage;
 import messages.ClientMessage.ClientMessageType;
 import messages.ServerMessage;
+import java.util.Scanner;
 
 public class YoolooClient {
 
@@ -49,7 +50,9 @@ public class YoolooClient {
 	 * Diese terminiert wenn das Spiel oder die Verbindung beendet wird.
 	 */
 	public void startClient() {
-
+		System.out.println("Bitte gib deinen Namen an: ");
+		Scanner nameScanner = new Scanner(System.in);
+		this.spielerName = nameScanner.nextLine();
 		try {
 			clientState = ClientState.CLIENTSTATE_CONNECT;
 			verbindeZumServer();
