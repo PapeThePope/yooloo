@@ -15,10 +15,12 @@ public class Starter {
 		yooloo.listeSpielstand();
 
 //		Registrieren der Spieler
-		yooloo.spielerRegistrieren("Juergen");
-		yooloo.spielerRegistrieren("Reiner");
-		yooloo.spielerRegistrieren("Benedikt");
-		yooloo.spielerRegistrieren("Olaf");
+		yooloo.spielerRegistrieren("Maik");	
+		yooloo.spielerRegistrieren("Jakob");
+		yooloo.spielerRegistrieren("Jakub");
+		yooloo.spielerRegistrieren("Matthias");
+		yooloo.spielerRegistrieren("Tobias");
+		yooloo.spielerRegistrieren("Sebastian");		
 
 //		Sortieren der Karten
 		yooloo.spielerSortierungFestlegen();
