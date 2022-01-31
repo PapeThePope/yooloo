@@ -27,15 +27,31 @@ public class YoolooSpieler implements Serializable {
 
 	// Sortierung wird zufuellig ermittelt
 	public void sortierungFestlegen() {
+		System.out.println("babypenis");
 		YoolooKarte[] neueSortierung = new YoolooKarte[this.aktuelleSortierung.length];
-		for (int i = 0; i < neueSortierung.length; i++) {
-			int neuerIndex = (int) (Math.random() * neueSortierung.length);
-			while (neueSortierung[neuerIndex] != null) {
-				neuerIndex = (int) (Math.random() * neueSortierung.length);
-			}
-			neueSortierung[neuerIndex] = aktuelleSortierung[i];
-			// System.out.println(i+ ". neuerIndex: "+neuerIndex);
+		int r = (int) (Math.random() * (3 - 1)) + 1;
+		System.out.println(r);
+		switch(r){
+			case 1:
+				System.out.println("Maxipenis");
+				for (int i = 0; i < neueSortierung.length; i++) {
+					int neuerIndex = (int) (Math.random() * neueSortierung.length);
+					while (neueSortierung[neuerIndex] != null) {
+						neuerIndex = (int) (Math.random() * neueSortierung.length);
+					}
+					neueSortierung[neuerIndex] = aktuelleSortierung[i];
+					// System.out.println(i+ ". neuerIndex: "+neuerIndex);
+				}
+			case 2:
+				System.out.println("penis");
+				common.YoolooKartenspiel.Kartenfarbe currentcolor= aktuelleSortierung[0].getFarbe();
+				for(int i = 0; i < neueSortierung.length; i++){
+					neueSortierung[0] = new YoolooKarte(currentcolor, i+1);
+				}
+					
 		}
+		
+
 		aktuelleSortierung = neueSortierung;
 	}
 
