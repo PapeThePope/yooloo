@@ -46,7 +46,7 @@ public class YoolooSpieler implements Serializable {
 				System.out.println("penis");
 				common.YoolooKartenspiel.Kartenfarbe currentcolor= aktuelleSortierung[0].getFarbe();
 				for(int i = 0; i < neueSortierung.length; i++){
-					neueSortierung[0] = new YoolooKarte(currentcolor, i+1);
+					neueSortierung[i] = new YoolooKarte(currentcolor, i+1);
 				}
 					
 		}
