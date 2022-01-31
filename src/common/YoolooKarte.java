@@ -28,6 +28,10 @@ public class YoolooKarte implements Serializable {
 		return wert;
 	}
 
+	public void setFarbe(common.YoolooKartenspiel.Kartenfarbe kartenfarbe) {
+		farbe =  kartenfarbe;
+	}
+
 	@Override
 	public String toString() {
 		return "YoolooKarte [farbe=" + farbe + ", wert=" + wert + "]";
