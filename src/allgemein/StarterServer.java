@@ -15,9 +15,15 @@ public class StarterServer {
 		System.out.println("Wie viele Spieler spielen mit?");
 		Scanner playerScanner = new Scanner(System.in);
 		int listeningPort = 44137;
-		int spieleranzahl = Integer.parseInt(playerScanner.nextLine()); // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
-		YoolooServer server = new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_SINGLE_GAME);
+		try{
+			int spieleranzahl = Integer.parseInt(playerScanner.nextLine()); // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
+			YoolooServer server = new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_SINGLE_GAME);
 		server.startServer();
+		}catch(Exception exception){
+			System.out.println("Bitte gebe die Spielerzahl in Zahlen ein. Danke.");
+			System.exit(1);
+		}
+		
 	}
 
 }

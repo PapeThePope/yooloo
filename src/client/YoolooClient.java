@@ -78,8 +78,13 @@ public class YoolooClient {
 			clientSortierung = new YoolooKarte[10];
 			for ( int i = 0; i < clientSortierung.length; i++ ) {
 				System.out.println( "Gebe nun die Karte Nr. " + ( i + 1 ) + " an!" );
+				try{
 				Scanner cardScanner = new Scanner( System.in );
 				clientSortierung[i] = new YoolooKarte( Kartenfarbe.Gelb, Integer.parseInt( cardScanner.nextLine() ) );
+				}catch(Exception exception){
+					System.out.println("Bitte gebe nur Zahlen als Kartenwerte an.");
+					System.exit(1);
+				}	
 			}
 		}
 
