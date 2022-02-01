@@ -16,6 +16,7 @@ public class StarterServer {
 		Scanner playerScanner = new Scanner(System.in);
 		int listeningPort = 44137;
 		int spieleranzahl = Integer.parseInt(playerScanner.nextLine()); // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
+		playerScanner.close();
 		YoolooServer server = new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_SINGLE_GAME);
 		server.startServer();
 	}
