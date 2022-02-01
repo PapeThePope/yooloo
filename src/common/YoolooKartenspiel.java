@@ -192,18 +192,16 @@ public class YoolooKartenspiel {
 		return gewinnerIndex;
 	}
 	
-   public String getSpielname() {
-   return Spielname;
-}
+   	public String getSpielname() {
+		return Spielname;
+	}
 
 	public void setSpielname(String spielname) {
-   Spielname = spielname;
-}
+   		Spielname = spielname;
+	}
 
-	public ArrayList<YoolooSpieler> getSpielerliste(){
+	public ArrayList<YoolooSpieler> getSpielerliste() {
 		return this.spielerliste;
-
-}
- 
+	}
 
 }

@@ -20,6 +20,9 @@ import common.YoolooStich;
 import messages.ClientMessage;
 import messages.ClientMessage.ClientMessageType;
 import messages.ServerMessage;
+import user.User;
+import user.Users;
+
 import java.util.Scanner;
 
 public class YoolooClient {
@@ -55,13 +58,46 @@ public class YoolooClient {
 		System.out.println("Bitte gib deinen Namen an: ");
 		Scanner nameScanner = new Scanner(System.in);
 		this.spielerName = nameScanner.nextLine();
-		System.out.println("Gebe deine 10 Spielkarten an (Jede nur 1x!):");
-		YoolooKarte[] clientSortierung = new YoolooKarte[10];
-		for(int i = 0;i < clientSortierung.length; i++){
-			System.out.println("Gebe nun die Karte Nr. " + (i+1) + " an!");
-			Scanner cardScanner = new Scanner(System.in);
-			clientSortierung[i] = new YoolooKarte(Kartenfarbe.Gelb, Integer.parseInt(cardScanner.nextLine()));
+
+		User user = Users.getUser( this.spielerName );
+		YoolooKarte[] clientSortierung = null;
+
+		if ( user.hasSorting() ) {
+
+			System.out.println( "Zuletzt gespielt Sortierung übernehmen (1) oder neue Sortierung festlegen (2):" );
+			Scanner cardScanner = new Scanner( System.in );
+			int choice = 1;
+			try {
+				choice = Integer.parseInt( cardScanner.nextLine() );
+			} catch(Exception exception){
+				System.out.println( "Es stehen nur 1 und 2 als Auswahl zur Verfügung." );
+				System.exit(1);
+			}
+
+			if( choice == 1 ) {
+				clientSortierung = user.getSorting();
+			}
+
 		}
+
+		if( clientSortierung == null ) {
+			System.out.println( "Gebe deine 10 Spielkarten an (Jede nur 1x!):" );
+			clientSortierung = new YoolooKarte[10];
+			for ( int i = 0; i < clientSortierung.length; i++ ) {
+				System.out.println( "Gebe nun die Karte Nr. " + ( i + 1 ) + " an!" );
+				try {
+					Scanner cardScanner = new Scanner( System.in );
+					clientSortierung[i] = new YoolooKarte( Kartenfarbe.Gelb, Integer.parseInt( cardScanner.nextLine() ) );
+				} catch( Exception exception ) {
+					System.out.println("Bitte gebe nur Zahlen als Kartenwerte an.");
+					System.exit(1);
+				}	
+			}
+		}
+
+		user.setSorting( clientSortierung );
+		Users.updateUser( user );
+
 		try {
 			clientState = ClientState.CLIENTSTATE_CONNECT;
 			verbindeZumServer();
