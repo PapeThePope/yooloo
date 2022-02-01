@@ -27,10 +27,6 @@ public class LeagueMode {
         player.setClientHandlerId(0);
         add(player);
 
-        player = new YoolooSpieler("Maik",10);
-        player.setClientHandlerId(1);
-        add(player);
-
         player = new YoolooSpieler("Tobias",10);
         player.setClientHandlerId(2);
         add(player);
