@@ -63,9 +63,10 @@ public class YoolooSession {
 					}else{
 						List<YoolooSpieler> spieler=  this.getAktuellesSpiel().getSpielerliste();
 						YoolooKartenspiel.Kartenfarbe color = karte.getFarbe();
-						YoolooSpieler cheater = spieler.stream().filter(card -> {
-							return card.getSpielfarbe().equals(color);
-						}).findFirst().get();
+						YoolooSpieler cheater = spieler.stream()
+								.filter(card -> card.getSpielfarbe().equals(color))
+								.findFirst()
+								.get();
 
 						System.out.println(cheater.getName() + " IS CHEATING");
 						karte.setWert(0);
