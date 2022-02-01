@@ -19,7 +19,6 @@ public class YoolooServer {
 	private int port = 44137;
 	private int spielerProRunde = 8; // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
 	private GameMode serverGameMode = GameMode.GAMEMODE_SINGLE_GAME;
-
 	public GameMode getServerGameMode() {
 		return serverGameMode;
 	}
@@ -46,7 +45,7 @@ public class YoolooServer {
 		GAMEMODE_NULL, // Spielmodus noch nicht definiert
 		GAMEMODE_SINGLE_GAME, // Spielmodus: einfaches Spiel
 		GAMEMODE_PLAY_ROUND_GAME, // noch nicht genutzt: Spielmodus: Eine Runde von Spielen
-		GAMEMODE_PLAY_LIGA, // noch nicht genutzt: Spielmodus: Jeder gegen jeden
+		GAMEMODE_PLAY_LIGA, // Spielmodus: Jeder gegen jeden
 		GAMEMODE_PLAY_POKAL, // noch nicht genutzt: Spielmodus: KO System
 		GAMEMODE_PLAY_POKAL_LL // noch nicht genutzt: Spielmodus: KO System mit Lucky Looser
 	};

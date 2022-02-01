@@ -2,6 +2,7 @@ package modules;
 
 import common.YoolooSpieler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ligarunde {
@@ -11,6 +12,8 @@ public class Ligarunde {
     public Ligarunde(List<YoolooSpieler> players) {
 
         this.players = players;
+        this.Matchups = new ArrayList<>();
+        LoadMatchups();
     }
     public void LoadMatchups(){
         for (YoolooSpieler player:players) {

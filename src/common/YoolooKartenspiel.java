@@ -42,7 +42,7 @@ public class YoolooKartenspiel {
 				spielkarten[farbe][wert] = new YoolooKarte(Kartenfarbe.values()[farbe], (wert + 1));
 			}
 		}
-		System.out.println("Je " + anzahlWerte + " Spielkarten fuer " + anzahlFarben + " Spieler zeugt");
+		System.out.println("Je " + anzahlWerte + " Spielkarten fuer bis zu " + anzahlFarben + " Spieler erzeugt");
 	}
 
 	public void listeSpielstand() {
