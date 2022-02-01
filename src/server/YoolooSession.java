@@ -44,7 +44,7 @@ public class YoolooSession {
 	}
 
 	public synchronized YoolooStich stichFuerRundeAuswerten(int stichNummer) {
-
+		String cheater="";
 		if (ausgewerteteStiche[stichNummer] == null) {
 			YoolooStich neuerStich = null;
 			YoolooKarte[] karten = spielplan[stichNummer];
@@ -55,24 +55,20 @@ public class YoolooSession {
 			}
 			if (karten != null) {
 				neuerStich = new YoolooStich(karten);
-
 				for(YoolooKarte karte:karten){
 					if(!playedCards.contains(karte)){
 						playedCards.add(karte);
 					}else{
-						List<YoolooSpieler> spieler=  this.getAktuellesSpiel().getSpielerliste();
-						YoolooKartenspiel.Kartenfarbe color = karte.getFarbe();
-						YoolooSpieler cheater = spieler.stream()
-								.filter(card -> card.getSpielfarbe().equals(color))
-								.findFirst()
-								.get();
-
-						System.out.println(cheater.getName() + " IS CHEATING");
+						cheater = getPlayerNameFromCard(karte);
+						System.out.println(cheater + " IS CHEATING");
+						karte.setWert(0);
+					}
+					if(karte.getWert()>10){
+						cheater = getPlayerNameFromCard(karte);
+						System.out.println("NICE TRY CHEATER- " + cheater + " - BUT NOT WITH ME AS RULE CHECKER, NOW FEEL MY POWER");
 						karte.setWert(0);
 					}
 				}
-
-
 				neuerStich.setStichNummer(stichNummer);
 				neuerStich.setSpielerNummer(aktuellesSpiel.berechneGewinnerIndex(karten));
 				ausgewerteteStiche[stichNummer] = neuerStich;
@@ -81,6 +77,17 @@ public class YoolooSession {
 		}
 		return ausgewerteteStiche[stichNummer];
 
+	}
+
+	private String getPlayerNameFromCard(YoolooKarte karte){
+		List<YoolooSpieler> spieler=  this.getAktuellesSpiel().getSpielerliste();
+		YoolooKartenspiel.Kartenfarbe color = karte.getFarbe();
+		YoolooSpieler player = spieler.stream()
+				.filter(card -> card.getSpielfarbe().equals(color))
+				.findFirst()
+				.get();
+
+		return player.getName();
 	}
 
 	public YoolooKartenspiel getAktuellesSpiel() {
