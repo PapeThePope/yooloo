@@ -6,16 +6,17 @@ package common;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import common.YoolooKartenspiel.Kartenfarbe;
 
-public class YoolooSpieler implements Serializable {
+public class YoolooSpieler implements Serializable,  Comparable<YoolooSpieler> {
 
 	private static final long serialVersionUID = 376078630788146549L;
 	private String name;
 	private Kartenfarbe spielfarbe;
 	private int clientHandlerId = -1;
-	private int punkte;
+	private int punkte = 0;
 	private YoolooKarte[] aktuelleSortierung;
 
 	public YoolooSpieler(String name, int maxKartenWert) {
@@ -23,6 +24,11 @@ public class YoolooSpieler implements Serializable {
 		this.punkte = 0;
 		this.spielfarbe = null;
 		this.aktuelleSortierung = new YoolooKarte[maxKartenWert];
+	}
+
+	@Override
+	public int compareTo(YoolooSpieler e) {
+		return this.getPunkte() - e.getPunkte();
 	}
 
 	// Sortierung wird zufuellig ermittelt

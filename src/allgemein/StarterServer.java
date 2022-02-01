@@ -12,12 +12,20 @@ import server.YoolooServer.GameMode;
 public class StarterServer {
 
 	public static void main(String[] args) {
+		System.out.println("Welchen Modus willst Du spielen?");
+		System.out.println("1 = normal, 2 = Turniermodus");
+		Scanner modusScanner = new Scanner(System.in);
+int modus = 		Integer.parseInt(modusScanner.nextLine());
 		System.out.println("Wie viele Spieler spielen mit?");
 		Scanner playerScanner = new Scanner(System.in);
 		int listeningPort = 44137;
 		try{
 			int spieleranzahl = Integer.parseInt(playerScanner.nextLine()); // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
-			YoolooServer server = new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_SINGLE_GAME);
+		YoolooServer server;
+		if (modus == 2)
+		server= new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_PLAY_LIGA);
+		 else
+		server = new YoolooServer(listeningPort, spieleranzahl, GameMode.GAMEMODE_SINGLE_GAME);
 		server.startServer();
 		}catch(Exception exception){
 			System.out.println("Bitte gebe die Spielerzahl in Zahlen ein. Danke.");
