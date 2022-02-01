@@ -5,13 +5,14 @@ import common.YoolooSpieler;
 import server.YoolooClientHandler;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class LeagueMode {
     private List<YoolooSpieler> players;
     public Ligarunde hinrunde;
     public Ligarunde rueckrunde;
     private List<YoolooClientHandler> clientHandlerList;
-
+    private Logger leagueModeLogger;
 
     public LeagueMode(List<YoolooSpieler> InitialPlayers) {
         this.players = new ArrayList<YoolooSpieler>();
@@ -19,12 +20,13 @@ public class LeagueMode {
         hinrunde = new Ligarunde(players);
         rueckrunde = new Ligarunde(players);
     }
-    public LeagueMode(List<YoolooClientHandler> InitialPlayers, int i) {
+    public LeagueMode(List<YoolooClientHandler> InitialPlayers, int i, Logger logger) {
         this.clientHandlerList = InitialPlayers;
         this.players = new ArrayList<YoolooSpieler>();
         InitialPlayers.forEach(yoolooClientHandler -> players.add(yoolooClientHandler.GetSpieler()));
         hinrunde = new Ligarunde(players);
         rueckrunde = new Ligarunde(players);
+        leagueModeLogger = logger;
     }
 
     private static List<YoolooSpieler> TestSpieler  = new ArrayList<YoolooSpieler>() {{
@@ -60,6 +62,8 @@ public class LeagueMode {
     }
 
     private void StartRunde(Ligarunde runde) {
+    	leagueModeLogger.info(runde + " startet");
+    	
         for (Matchup matchup : runde.Matchups
         ) {
             YoolooKartenspiel game = new YoolooKartenspiel();
@@ -90,6 +94,7 @@ public class LeagueMode {
     }
 
     public List<YoolooSpieler> FindWinner() {
+    	leagueModeLogger.info("Gewinner wird ermittelt");
         List<YoolooSpieler> winner = new ArrayList<>();
         int high = 0;
         for (YoolooSpieler player : players

@@ -5,6 +5,7 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 
 public class YoolooKartenspiel {
@@ -14,7 +15,8 @@ public class YoolooKartenspiel {
 	}
 
 	private String Spielname = "Yooloo";
-
+	private Logger YoloKartenspielLogger;
+	
 	public final static int minKartenWert = 1;
 	public final static int maxKartenWert = 10;
 

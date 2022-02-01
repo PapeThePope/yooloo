@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import common.YoolooKartenspiel;
 import modules.LeagueMode;
@@ -67,14 +69,16 @@ public class YoolooServer {
         this.serverGameMode = gameMode;
     }
 
-    public void startServer() {
+    public void startServer(Logger logger) {
         try {
             // Init
             serverSocket = new ServerSocket(port);
             spielerPool = Executors.newCachedThreadPool();
             clientHandlerList = new ArrayList<YoolooClientHandler>();
             System.out.println("Server gestartet - warte auf Spieler");
-
+            
+            logger.log(Level.INFO, "Server wartet auf Spieler");
+            
             while (serverAktiv) {
                 Socket client = null;
 
@@ -86,6 +90,7 @@ public class YoolooServer {
                     System.out.println("[YoolooServer] Anzahl verbundene Spieler: " + clientHandlerList.size());
                 } catch (IOException e) {
                     System.out.println("Client Verbindung gescheitert");
+                    logger.severe("Client Verbindung gescheitert");
                     e.printStackTrace();
                 }
 
@@ -93,13 +98,18 @@ public class YoolooServer {
                 if (clientHandlerList.size() >= Math.min(spielerProRunde,
                         YoolooKartenspiel.Kartenfarbe.values().length)) {
                     // Init Session
-                    YoolooSession yoolooSession = new YoolooSession(clientHandlerList.size(), serverGameMode);
+                    YoolooSession yoolooSession = new YoolooSession(clientHandlerList.size(), serverGameMode, logger);
+                    
+                    logger.info("Neue Session beginnt mit " + clientHandlerList.size() + " Spielern");
+                    
                     if (serverGameMode == GameMode.GAMEMODE_SINGLE_GAME)
                         // Starte pro Client einen ClientHandlerTread
-                        for (int i = 0; i < clientHandlerList.size(); i++) {
+                    	logger.info("Einfaches Spiel wird erstellt");
+                    	for (int i = 0; i < clientHandlerList.size(); i++) {
                             YoolooClientHandler ch = clientHandlerList.get(i);
                             ch.setHandlerID(i);
                             ch.joinSession(yoolooSession);
+                            logger.info("Spieler tritt der Session bei");
                             spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
                         }
                     if (serverGameMode == GameMode.GAMEMODE_PLAY_LIGA) {
@@ -107,7 +117,9 @@ public class YoolooServer {
                             YoolooClientHandler ch = clientHandlerList.get(i);
                             ch.setHandlerID(i);
                             ch.joinSession(yoolooSession);
-                            LeagueMode liga = new LeagueMode(clientHandlerList, 0);
+                            LeagueMode liga = new LeagueMode(clientHandlerList, 0, logger);
+                            logger.info("Ligamodus wird erstellt");
+                            
                             for (Matchup matchup : liga.hinrunde.Matchups
                             ) {
                                 currentMatchup = matchup;
@@ -118,15 +130,16 @@ public class YoolooServer {
                                 currentMatchup = matchup;
                                 spielerPool.execute(ch);
                             }
-
                         }
                     }
                     // nuechste Runde eroeffnen
                     clientHandlerList = new ArrayList<YoolooClientHandler>();
+                    logger.info("Nächste Runde wird eröffnet");
                 }
             }
         } catch (IOException e1) {
             System.out.println("ServerSocket nicht gebunden");
+            logger.warning("ServerSocket nicht gebunden");
             serverAktiv = false;
             e1.printStackTrace();
         }
@@ -134,13 +147,15 @@ public class YoolooServer {
     }
 
     // TODO Dummy zur Serverterminierung noch nicht funktional
-    public void shutDownServer(int code) {
+    public void shutDownServer(int code, Logger logger) {
         if (code == 543210) {
             this.serverAktiv = false;
             System.out.println("Server wird beendet");
+            logger.info("Server wird beendet");
             spielerPool.shutdown();
         } else {
             System.out.println("Servercode falsch");
+            logger.warning("Servercode falsch");
         }
     }
 }

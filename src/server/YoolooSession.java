@@ -12,6 +12,7 @@ import server.YoolooServer.GameMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class YoolooSession {
 
@@ -21,6 +22,7 @@ public class YoolooSession {
 	private YoolooKartenspiel aktuellesSpiel;
 	private YoolooStich[] ausgewerteteStiche;
 	private List<YoolooKarte> playedCards = new ArrayList<>();
+	private Logger sessionLogger;
 
 	public YoolooSession(int anzahlSpielerInRunde) {
 		super();
@@ -34,9 +36,10 @@ public class YoolooSession {
 		aktuellesSpiel = new YoolooKartenspiel();
 	}
 
-	public YoolooSession(int anzahlSpielerInRunde, GameMode gamemode) {
+	public YoolooSession(int anzahlSpielerInRunde, GameMode gamemode, Logger logger) {
 		this(anzahlSpielerInRunde);
 		this.gamemode = gamemode;
+		sessionLogger = logger;
 	}
 
 	public synchronized void spieleKarteAus(int stichNummer, int spielerID, YoolooKarte karte) {
@@ -44,6 +47,7 @@ public class YoolooSession {
 	}
 
 	public synchronized YoolooStich stichFuerRundeAuswerten(int stichNummer) {
+		sessionLogger.info("Stich wird ausgewertet");
 		String cheater="";
 		if (ausgewerteteStiche[stichNummer] == null) {
 			YoolooStich neuerStich = null;
@@ -54,6 +58,7 @@ public class YoolooSession {
 				}
 			}
 			if (karten != null) {
+				sessionLogger.info("Neuer Stich wird erstellt");
 				neuerStich = new YoolooStich(karten);
 				for(YoolooKarte karte:karten){
 					if(!playedCards.contains(karte)){
@@ -61,16 +66,19 @@ public class YoolooSession {
 					}else{
 						cheater = getPlayerNameFromCard(karte);
 						System.out.println(cheater + " IS CHEATING");
+						sessionLogger.info(cheater + " schummelt");
 						karte.setWert(0);
 					}
 					if(karte.getWert()>10){
 						cheater = getPlayerNameFromCard(karte);
 						System.out.println("NICE TRY CHEATER- " + cheater + " - BUT NOT WITH ME AS RULE CHECKER, NOW FEEL MY POWER");
+						sessionLogger.info(cheater + " hat geschummelt");
 						karte.setWert(0);
 					}
 				}
 				neuerStich.setStichNummer(stichNummer);
 				neuerStich.setSpielerNummer(aktuellesSpiel.berechneGewinnerIndex(karten));
+				sessionLogger.info("Gewinner-Index wird berechnet für den" + stichNummer + ". Stich");
 				ausgewerteteStiche[stichNummer] = neuerStich;
 				System.out.println("Stich ausgewertet:" + neuerStich.toString());
 			}
@@ -111,6 +119,7 @@ public class YoolooSession {
 	}
 
 	public void setGamemode(GameMode gamemode) {
+		sessionLogger.info("Spielmodus wird gesetzt");
 		this.gamemode = gamemode;
 	}
 
@@ -119,10 +128,12 @@ public class YoolooSession {
 	}
 
 	public void setSpielplan(YoolooKarte[][] spielplan) {
+		sessionLogger.info("Spielplan wird gesetzt");
 		this.spielplan = spielplan;
 	}
 
 	public String getErgebnis() {
+		sessionLogger.info("Ergebnis wird übergeben");
 		// TODO mit Funktion fuellen
 		String ergebnis = "Ergebnis:\n blabla";
 		return ergebnis;
