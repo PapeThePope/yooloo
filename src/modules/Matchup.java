@@ -10,5 +10,8 @@ public class Matchup {
         this.player = player;
         this.opponent = opponent;
     }
+    public boolean PlayerInMatchup(YoolooSpieler player){
+        return this.player == player || this.opponent == player;
+    }
 
 }

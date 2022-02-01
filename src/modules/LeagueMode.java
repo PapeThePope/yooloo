@@ -1,23 +1,28 @@
 package modules;
 
-import client.YoolooClient;
 import common.YoolooKartenspiel;
 import common.YoolooSpieler;
-import server.YoolooServer;
+import server.YoolooClientHandler;
 
 import java.util.*;
 
-import static server.YoolooServer.GameMode.GAMEMODE_PLAY_LIGA;
-
 public class LeagueMode {
     private List<YoolooSpieler> players;
-    private Ligarunde hinrunde;
-    private Ligarunde rueckrunde;
+    public Ligarunde hinrunde;
+    public Ligarunde rueckrunde;
+    private List<YoolooClientHandler> clientHandlerList;
 
 
     public LeagueMode(List<YoolooSpieler> InitialPlayers) {
         this.players = new ArrayList<YoolooSpieler>();
         this.players.addAll(InitialPlayers);
+        hinrunde = new Ligarunde(players);
+        rueckrunde = new Ligarunde(players);
+    }
+    public LeagueMode(List<YoolooClientHandler> InitialPlayers, int i) {
+        this.clientHandlerList = InitialPlayers;
+        this.players = new ArrayList<YoolooSpieler>();
+        InitialPlayers.forEach(yoolooClientHandler -> players.add(yoolooClientHandler.GetSpieler()));
         hinrunde = new Ligarunde(players);
         rueckrunde = new Ligarunde(players);
     }
@@ -45,10 +50,10 @@ public class LeagueMode {
     }};
 
     public static void main(String[] args){
-        new LeagueMode(TestSpieler).StartLeague();
+        new LeagueMode(TestSpieler).StartSimulationLeague();
     }
 
-    public void StartLeague() {
+    public void StartSimulationLeague() {
         StartRunde(hinrunde);
         StartRunde(rueckrunde);
         Finalize();
@@ -65,25 +70,8 @@ public class LeagueMode {
         }
     }
 
-    public void startLigaServer(){
-        YoolooServer server = new YoolooServer(44137,2,GAMEMODE_PLAY_LIGA);
-        server.startServer();
-    }
+    private void PlayMatchup(Matchup m){
 
-    public void startLigaClient(){
-        Scanner hostnameScanner = new Scanner(System.in);
-        String hostname = hostnameScanner.nextLine();
-
-        YoolooClient client1 = new YoolooClient(hostname, 44137);
-        YoolooClient client2 = new YoolooClient(hostname, 44137);
-        YoolooClient client3 = new YoolooClient(hostname, 44137);
-        YoolooClient client4 = new YoolooClient(hostname, 44137);
-        YoolooClient client5 = new YoolooClient(hostname, 44137);
-        client1.startClient();
-        client2.startClient();
-        client3.startClient();
-        client4.startClient();
-        client5.startClient();
     }
 
     private void Finalize(){

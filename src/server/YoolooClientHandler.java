@@ -40,6 +40,9 @@ public class YoolooClientHandler extends Thread {
 	private YoolooSession session;
 	private YoolooSpieler meinSpieler = null;
 	private int clientHandlerId;
+	public YoolooSpieler GetSpieler(){
+		return meinSpieler;
+	}
 
 	public YoolooClientHandler(YoolooServer yoolooServer, Socket clientSocket) {
 		this.myServer = yoolooServer;
@@ -120,6 +123,8 @@ public class YoolooClientHandler extends Thread {
 						this.state = ServerState.ServerState_DISCONNECT;
 						break;
 						case GAMEMODE_PLAY_LIGA:{
+
+							if(myServer.CurrentMatchup().PlayerInMatchup(meinSpieler))
 							// Triggersequenz zur Abfrage der einzelnen Karten des Spielers
 							for (int stichNummer = 0; stichNummer < YoolooKartenspiel.maxKartenWert; stichNummer++) {
 								sendeKommando(ServerMessageType.SERVERMESSAGE_SEND_CARD,
