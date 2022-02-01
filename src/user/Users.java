@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Users {
 
-    private static final String FILE_PATH = "./players.txt";
+    private static final String FILE_PATH = "./users.txt";
 
     public static User getUser( String name ) {
         HashMap<String, User> cached_users = getUsers();
