@@ -66,7 +66,14 @@ public class YoolooClient {
 
 			System.out.println( "Zuletzt gespielt Sortierung übernehmen (1) oder neue Sortierung festlegen (2):" );
 			Scanner cardScanner = new Scanner( System.in );
-			int choice = Integer.parseInt( cardScanner.nextLine() );
+			int choice = 1;
+			try {
+				choice = Integer.parseInt( cardScanner.nextLine() );
+			} catch(Exception exception){
+				System.out.println( "Es stehen nur 1 und 2 als Auswahl zur Verfügung." );
+				System.exit(1);
+			}
+
 			if( choice == 1 ) {
 				clientSortierung = user.getSorting();
 			}
@@ -78,10 +85,10 @@ public class YoolooClient {
 			clientSortierung = new YoolooKarte[10];
 			for ( int i = 0; i < clientSortierung.length; i++ ) {
 				System.out.println( "Gebe nun die Karte Nr. " + ( i + 1 ) + " an!" );
-				try{
-				Scanner cardScanner = new Scanner( System.in );
-				clientSortierung[i] = new YoolooKarte( Kartenfarbe.Gelb, Integer.parseInt( cardScanner.nextLine() ) );
-				}catch(Exception exception){
+				try {
+					Scanner cardScanner = new Scanner( System.in );
+					clientSortierung[i] = new YoolooKarte( Kartenfarbe.Gelb, Integer.parseInt( cardScanner.nextLine() ) );
+				} catch( Exception exception ) {
 					System.out.println("Bitte gebe nur Zahlen als Kartenwerte an.");
 					System.exit(1);
 				}	
