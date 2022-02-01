@@ -55,14 +55,12 @@ public class YoolooClient {
 		System.out.println("Bitte gib deinen Namen an: ");
 		Scanner nameScanner = new Scanner(System.in);
 		this.spielerName = nameScanner.nextLine();
-		nameScanner.close();
 		System.out.println("Gebe deine 10 Spielkarten an (Jede nur 1x!):");
 		YoolooKarte[] clientSortierung = new YoolooKarte[10];
 		for(int i = 0;i < clientSortierung.length; i++){
 			System.out.println("Gebe nun die Karte Nr. " + (i+1) + " an!");
 			Scanner cardScanner = new Scanner(System.in);
 			clientSortierung[i] = new YoolooKarte(Kartenfarbe.Gelb, Integer.parseInt(cardScanner.nextLine()));
-			cardScanner.close();
 		}
 		try {
 			clientState = ClientState.CLIENTSTATE_CONNECT;
