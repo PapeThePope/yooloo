@@ -32,9 +32,21 @@ public class YoolooKarte implements Serializable {
 		farbe =  kartenfarbe;
 	}
 
+	public void setWert(int wert){
+		this.wert=wert;
+	}
+
 	@Override
 	public String toString() {
 		return "YoolooKarte [farbe=" + farbe + ", wert=" + wert + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		YoolooKarte that = (YoolooKarte) o;
+		return wert == that.wert && farbe == that.farbe;
 	}
 
 }

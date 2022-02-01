@@ -6,8 +6,13 @@ package server;
 
 import common.YoolooKarte;
 import common.YoolooKartenspiel;
+import common.YoolooSpieler;
 import common.YoolooStich;
 import server.YoolooServer.GameMode;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class YoolooSession {
 
@@ -16,6 +21,7 @@ public class YoolooSession {
 	private YoolooKarte[][] spielplan;
 	private YoolooKartenspiel aktuellesSpiel;
 	private YoolooStich[] ausgewerteteStiche;
+	private List<YoolooKarte> playedCards = new ArrayList<>();
 
 	public YoolooSession(int anzahlSpielerInRunde) {
 		super();
@@ -39,6 +45,7 @@ public class YoolooSession {
 	}
 
 	public synchronized YoolooStich stichFuerRundeAuswerten(int stichNummer) {
+
 		if (ausgewerteteStiche[stichNummer] == null) {
 			YoolooStich neuerStich = null;
 			YoolooKarte[] karten = spielplan[stichNummer];
@@ -49,6 +56,24 @@ public class YoolooSession {
 			}
 			if (karten != null) {
 				neuerStich = new YoolooStich(karten);
+
+				for(YoolooKarte karte:karten){
+					if(!playedCards.contains(karte)){
+						playedCards.add(karte);
+					}else{
+						List<YoolooSpieler> spieler=  this.getAktuellesSpiel().getSpielerliste();
+						YoolooKartenspiel.Kartenfarbe color = karte.getFarbe();
+						YoolooSpieler cheater = spieler.stream()
+								.filter(card -> card.getSpielfarbe().equals(color))
+								.findFirst()
+								.get();
+
+						System.out.println(cheater.getName() + " IS CHEATING");
+						karte.setWert(0);
+					}
+				}
+
+
 				neuerStich.setStichNummer(stichNummer);
 				neuerStich.setSpielerNummer(aktuellesSpiel.berechneGewinnerIndex(karten));
 				ausgewerteteStiche[stichNummer] = neuerStich;

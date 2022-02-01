@@ -196,8 +196,13 @@ public class YoolooKartenspiel {
    return Spielname;
 }
 
-public void setSpielname(String spielname) {
+	public void setSpielname(String spielname) {
    Spielname = spielname;
+}
+
+	public ArrayList<YoolooSpieler> getSpielerliste(){
+		return this.spielerliste;
+
 }
  
 
