@@ -15,6 +15,7 @@ public class StarterClient {
 		Scanner hostnameScanner = new Scanner(System.in);
 		// Starte Client
 		String hostname = hostnameScanner.nextLine();
+		hostnameScanner.close();
 //		String hostname = "10.101.251.247";
 		int port = 44137;
 		YoolooClient client = new YoolooClient(hostname, port);
