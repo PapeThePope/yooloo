@@ -5,3 +5,4 @@ out/
 users.txt
 Log.txt
 StarterServer.java.orig
+*.jar
