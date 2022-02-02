@@ -31,10 +31,10 @@ public class YoolooSpieler implements Serializable,  Comparable<YoolooSpieler> {
 		return this.getPunkte() - e.getPunkte();
 	}
 
-	// Sortierung wird zufuellig ermittelt
+	// Standardsortierungen (Zufällige Auswahl zwischen mehreren Strategien)
 	public void sortierungFestlegen() {
 		YoolooKarte[] neueSortierung = new YoolooKarte[this.aktuelleSortierung.length];
-		int r = (int) (Math.random() * (3 - 1)) + 1;
+		int r = (int) (Math.random() * (4 - 1)) + 1;
 		switch(r){
 			case 1:
 				for (int i = 0; i < neueSortierung.length; i++) {
@@ -49,6 +49,12 @@ public class YoolooSpieler implements Serializable,  Comparable<YoolooSpieler> {
 				common.YoolooKartenspiel.Kartenfarbe currentcolor= aktuelleSortierung[0].getFarbe();
 				for(int i = 0; i < neueSortierung.length; i++){
 					neueSortierung[i] = new YoolooKarte(currentcolor, i+1);
+				}
+				break;
+			case 3:
+				common.YoolooKartenspiel.Kartenfarbe mycolor= aktuelleSortierung[0].getFarbe();
+				for(int i = 0; i < neueSortierung.length; i++){
+					neueSortierung[i] = new YoolooKarte(mycolor, 10-i);
 				}
 				break;
 					

@@ -55,6 +55,7 @@ public class YoolooClient {
 	 * Diese terminiert wenn das Spiel oder die Verbindung beendet wird.
 	 */
 	public void startClient() {
+		// Abfrage des Namens
 		System.out.println("Bitte gib deinen Namen an: ");
 		Scanner nameScanner = new Scanner(System.in);
 		this.spielerName = nameScanner.nextLine();
@@ -81,8 +82,10 @@ public class YoolooClient {
 		}
 
 		if( clientSortierung == null ) {
+			// Abfrage der Spielkarten
 			System.out.println( "Gebe deine 10 Spielkarten an (Jede nur 1x!):" );
 			clientSortierung = new YoolooKarte[10];
+			// Loop um Karten zu bekommen
 			for ( int i = 0; i < clientSortierung.length; i++ ) {
 				System.out.println( "Gebe nun die Karte Nr. " + ( i + 1 ) + " an!" );
 				try {
