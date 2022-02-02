@@ -46,6 +46,7 @@ public class YoolooClient {
 
 	public YoolooClient(String serverHostname, int serverPort) {
 		super();
+		this.serverHostname = serverHostname;
 		this.serverPort = serverPort;
 		clientState = ClientState.CLIENTSTATE_NULL;
 	}
