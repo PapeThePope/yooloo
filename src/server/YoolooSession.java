@@ -65,20 +65,28 @@ public class YoolooSession {
 						playedCards.add(karte);
 					}else{
 						cheater = getPlayerNameFromCard(karte);
-						System.out.println(cheater + " IS CHEATING");
+						System.out.println("");
+						System.out.println("***CHEATER ALERT***");
+						System.out.println(cheater + " tried to play card with value " + karte.getWert() + " more then one time \n" +
+								"Set " + cheater + "'s card value to zero");
+						System.out.println("");
 						sessionLogger.info(cheater + " schummelt");
 						karte.setWert(0);
 					}
 					if(karte.getWert()>10){
 						cheater = getPlayerNameFromCard(karte);
-						System.out.println("NICE TRY CHEATER- " + cheater + " - BUT NOT WITH ME AS RULE CHECKER, NOW FEEL MY POWER");
+						System.out.println("");
+						System.out.println("***CHEATER ALERT***");
+						System.out.println("Player " + cheater +" tried to play a card with a number greater then 10 \n" +
+								"Set "+ cheater+ "'s card value to zero");
+						System.out.println("");
 						sessionLogger.info(cheater + " hat geschummelt");
 						karte.setWert(0);
 					}
 				}
 				neuerStich.setStichNummer(stichNummer);
 				neuerStich.setSpielerNummer(aktuellesSpiel.berechneGewinnerIndex(karten));
-				sessionLogger.info("Gewinner-Index wird berechnet für den" + stichNummer + ". Stich");
+				sessionLogger.info("Gewinner-Index wird berechnet fï¿½r den" + stichNummer + ". Stich");
 				ausgewerteteStiche[stichNummer] = neuerStich;
 				System.out.println("Stich ausgewertet:" + neuerStich.toString());
 			}
@@ -133,7 +141,7 @@ public class YoolooSession {
 	}
 
 	public String getErgebnis() {
-		sessionLogger.info("Ergebnis wird übergeben");
+		sessionLogger.info("Ergebnis wird ï¿½bergeben");
 		// TODO mit Funktion fuellen
 		String ergebnis = "Ergebnis:\n blabla";
 		return ergebnis;
