@@ -31,6 +31,7 @@ import static server.YoolooClientHandler.ServerState.ServerState_DISCONNECT;
 public class YoolooClientHandler extends Thread {
 
     private final static int delay = 100;
+    public boolean leagueInProgress = false;
 
     private YoolooServer myServer;
 
@@ -83,7 +84,8 @@ public class YoolooClientHandler extends Thread {
             sendeKommando(ServerMessageType.SERVERMESSAGE_SENDLOGIN, ClientState.CLIENTSTATE_LOGIN, null);
 
             Object antwortObject = null;
-            while (this.state != ServerState.ServerState_DISCONNECTED) {
+            while (this.state != ServerState.ServerState_DISCONNECTED || leagueInProgress) {
+                while(this.state != ServerState.ServerState_DISCONNECTED){
                 // Empfange Spieler als Antwort vom Client
                 antwortObject = empfangeVomClient();
                 if (antwortObject instanceof ClientMessage) {
@@ -167,39 +169,32 @@ public class YoolooClientHandler extends Thread {
                                 System.out.println("Highscore: " + user.getHighscore());
                                 System.out.println("\n");
 
+
                                 this.state = ServerState_DISCONNECT;
                                 break;
                             }
                             case GAMEMODE_PLAY_LIGA: {
-                                while (true) {
-                                    for (int runde = 1; runde <= session.getAktuellesSpiel().getSpielerliste().size(); runde++) {
-                                        if (meinSpieler.getClientHandlerId() == runde || meinSpieler.getClientHandlerId() == runde - 1)
-                                            for (int stichNummer = 0; stichNummer < YoolooKartenspiel.maxKartenWert; stichNummer++) {
-                                                sendeKommando(ServerMessageType.SERVERMESSAGE_SEND_CARD,
-                                                        ClientState.CLIENTSTATE_PLAY_SINGLE_GAME, null, stichNummer);
-                                                // Neue YoolooKarte in Session ausspielen und Stich abfragen
-                                                YoolooKarte neueKarte = (YoolooKarte) empfangeVomClient();
-                                                System.out.println("[ClientHandler" + clientHandlerId + "] Karte empfangen:" + neueKarte);
-                                                YoolooStich currentstich = spieleKarte(stichNummer, neueKarte);
-                                                // Punkte fuer gespielten Stich ermitteln
-                                                if (currentstich.getSpielerNummer() == clientHandlerId) {
-                                                    meinSpieler.erhaeltPunkte(stichNummer + 1);
-                                                }
-                                                System.out.println("[ClientHandler" + clientHandlerId + "] Stich " + stichNummer
-                                                        + " wird gesendet: " + currentstich.toString());
-                                                // Stich an Client uebermitteln
-                                                oos.writeObject(currentstich);
-                                            }
-                                        if (runde == session.getAktuellesSpiel().getSpielerliste().size())
-                                            runde = 1;
+                                leagueInProgress = true;
+                                for (int stichNummer = 0; stichNummer < YoolooKartenspiel.maxKartenWert; stichNummer++) {
+                                    sendeKommando(ServerMessageType.SERVERMESSAGE_SEND_CARD,
+                                            ClientState.CLIENTSTATE_PLAY_SINGLE_GAME, null, stichNummer);
+                                    // Neue YoolooKarte in Session ausspielen und Stich abfragen
+                                    YoolooKarte neueKarte = (YoolooKarte) empfangeVomClient();
+                                    System.out.println("[ClientHandler" + clientHandlerId + "] Karte empfangen:" + neueKarte);
+                                    YoolooStich currentstich = spieleKarte(stichNummer, neueKarte);
+                                    // Punkte fuer gespielten Stich ermitteln
+                                    if (currentstich.getSpielerNummer() == clientHandlerId) {
+                                        meinSpieler.erhaeltPunkte(stichNummer + 1);
                                     }
-                                    sendeKommando(ServerMessageType.SERVERMESSAGE_SORT_CARD_SET, ClientState.CLIENTSTATE_SORT_CARDS,
-                                            null);
-                                    this.state = ServerState.ServerState_PLAY_SESSION;
-
-                                    myServer.Insert(meinSpieler.getName(), meinSpieler.getPunkte());
+                                    System.out.println("[ClientHandler" + clientHandlerId + "] Stich " + stichNummer
+                                            + " wird gesendet: " + currentstich.toString());
+                                    // Stich an Client uebermitteln
+                                    oos.writeObject(currentstich);
                                 }
+                                this.state = ServerState_DISCONNECT;
                             }
+                            break;
+
                             default: {
                                 System.out.println("[ClientHandler" + clientHandlerId + "] GameMode nicht implementiert");
                                 this.state = ServerState_DISCONNECT;
@@ -212,14 +207,18 @@ public class YoolooClientHandler extends Thread {
                         sendeKommando(ServerMessageType.SERVERMESSAGE_CHANGE_STATE, ClientState.CLIENTSTATE_DISCONNECTED, null);
                         // sendeKommando(ServerMessageType.SERVERMESSAGE_RESULT_SET, ClientState.CLIENTSTATE_DISCONNECTED,	null);
                         oos.writeObject(session.getErgebnis());
+
                         this.state = ServerState.ServerState_DISCONNECTED;
-                        break;
+                        if (!leagueInProgress)
+                            break;
                     default:
                         System.out.println("Undefinierter Serverstatus - tue mal nichts!");
 
                 }
             }
-        } catch (EOFException e) {
+        }
+    }
+        catch (EOFException e) {
             System.err.println(e);
             e.printStackTrace();
         } catch (IOException e) {
@@ -228,7 +227,6 @@ public class YoolooClientHandler extends Thread {
         } finally {
             System.out.println("[ClientHandler" + clientHandlerId + "] Verbindung zu " + socketAddress + " beendet");
         }
-
     }
 
     private void sendeKommando(ServerMessageType serverMessageType, ClientState clientState,
@@ -247,8 +245,13 @@ public class YoolooClientHandler extends Thread {
     }
 
     private void verbindeZumClient() throws IOException {
+        if(oos == null)
         oos = new ObjectOutputStream(clientSocket.getOutputStream());
+
+
+        if (ois == null)
         ois = new ObjectInputStream(clientSocket.getInputStream());
+
         System.out.println("[ClientHandler  " + clientHandlerId + "] Starte ClientHandler fuer: "
                 + clientSocket.getInetAddress() + ":->" + clientSocket.getPort());
         socketAddress = clientSocket.getRemoteSocketAddress();
