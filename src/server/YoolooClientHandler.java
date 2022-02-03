@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 
 import client.YoolooClient.ClientState;
 import common.LoginMessage;
@@ -23,6 +24,7 @@ import messages.ClientMessage;
 import messages.ServerMessage;
 import messages.ServerMessage.ServerMessageResult;
 import messages.ServerMessage.ServerMessageType;
+import user.GameResult;
 import user.User;
 import user.Users;
 
@@ -48,7 +50,6 @@ public class YoolooClientHandler extends Thread {
 
 	public YoolooClientHandler(YoolooServer yoolooServer, Socket clientSocket) {
 		this.myServer = yoolooServer;
-		myServer.toString();
 		this.clientSocket = clientSocket;
 		this.state = ServerState.ServerState_NULL;
 	}
@@ -117,6 +118,9 @@ public class YoolooClientHandler extends Thread {
 
 						switch (session.getGamemode()) {
 						case GAMEMODE_SINGLE_GAME:
+							User user = Users.getUser( meinSpieler.getName() );
+							ArrayList<Boolean> stitches_results = new ArrayList<>();
+
 							// Triggersequenz zur Abfrage der einzelnen Karten des Spielers
 							for (int stichNummer = 0; stichNummer < YoolooKartenspiel.maxKartenWert; stichNummer++) {
 								sendeKommando(ServerMessageType.SERVERMESSAGE_SEND_CARD,
@@ -128,6 +132,9 @@ public class YoolooClientHandler extends Thread {
 								// Punkte fuer gespielten Stich ermitteln
 								if (currentstich.getSpielerNummer() == clientHandlerId) {
 									meinSpieler.erhaeltPunkte(stichNummer + 1);
+									stitches_results.add( true );
+								} else {
+									stitches_results.add( false);
 								}
 								System.out.println("[ClientHandler" + clientHandlerId + "] Stich " + stichNummer
 										+ " wird gesendet: " + currentstich.toString());
@@ -135,15 +142,18 @@ public class YoolooClientHandler extends Thread {
 								oos.writeObject(currentstich);
 							}
 
+							user.addGameResult( new GameResult( user.getSorting(), stitches_results ) );
+
 							int points = meinSpieler.getPunkte();
 							boolean isWinner = true;
 
 							for( YoolooSpieler player : this.session.getAktuellesSpiel().getSpielerliste() ) {
-								if ( player.getPunkte() > points )
+								if ( player.getPunkte() > points ) {
 									isWinner = false;
+									break;
+								}
 							}
 
-							User user = Users.getUser( meinSpieler.getName() );
 							user.incrGamesPlayed( 1 );
 
 							if ( points > user.getHighscore() )

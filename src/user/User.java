@@ -3,6 +3,7 @@ package user;
 import common.YoolooKarte;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class User implements Serializable {
 
@@ -12,6 +13,7 @@ public class User implements Serializable {
     private int games_won;
     private int highscore;
     private int points_total;
+    private final ArrayList<GameResult> game_results = new ArrayList<>();
 
     public User( String name ) {
         this( name, null );
@@ -84,6 +86,14 @@ public class User implements Serializable {
 
     public void incrPointsTotal( int increment ) {
         this.points_total += increment;
+    }
+
+    public void addGameResult( GameResult result ) {
+        this.game_results.add( result );
+    }
+
+    public ArrayList<GameResult> getGameResults() {
+        return this.game_results;
     }
 
 }
