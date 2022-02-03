@@ -123,25 +123,28 @@ public class YoolooServer {
                     }
 
                     if(serverGameMode == GameMode.GAMEMODE_PLAY_LIGA){
-                        for (int j = 0; j < clientHandlerList.size() * clientHandlerList.size() -1; j++) {
-
-                        yoolooSession = new YoolooSession(2,GameMode.GAMEMODE_PLAY_LIGA,logger);
-                        for (int i = 0; i <2; i++) {
-                            YoolooClientHandler ch = clientHandlerList.get(j);
+                        for (int j = 0; j< clientHandlerList.size(); j++){
+                        yoolooSession = new YoolooSession(2, serverGameMode, logger);
+                        for (int i = 0; i < 2; i++) {
+                            YoolooClientHandler ch = clientHandlerList.get(i);
                             ch.setHandlerID(i);
                             ch.joinSession(yoolooSession);
                             logger.info("Spieler tritt der Session bei");
                             spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
                         }
+                        while(clientHandlerList.get(0).GetServerState() != YoolooClientHandler.ServerState.ServerState_DISCONNECTED){
+                            //Wait for clients to be disconnected
+                        }
                     }
                     }
+
 
 
                     // nuechste Runde eroeffnen
                     clientHandlerList = new ArrayList<YoolooClientHandler>();
                     logger.info("N�chste Runde wird er�ffnet");
-                }
-            }
+                }}
+
         } catch (IOException e1) {
             System.out.println("ServerSocket nicht gebunden");
             logger.warning("ServerSocket nicht gebunden");
