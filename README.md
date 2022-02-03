@@ -1,2 +1,2 @@
-# yooloo
-RBBK yooloo project
+# Yooloo
+RBBK Yooloo Project

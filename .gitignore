@@ -2,3 +2,7 @@
 yooloo.iml
 .DS_Store
 out/
+users.txt
+Log.txt
+StarterServer.java.orig
+*.jar

@@ -5,6 +5,7 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 
 public class YoolooKartenspiel {
@@ -14,7 +15,8 @@ public class YoolooKartenspiel {
 	}
 
 	private String Spielname = "Yooloo";
-
+	private Logger YoloKartenspielLogger;
+	
 	public final static int minKartenWert = 1;
 	public final static int maxKartenWert = 10;
 
@@ -42,7 +44,7 @@ public class YoolooKartenspiel {
 				spielkarten[farbe][wert] = new YoolooKarte(Kartenfarbe.values()[farbe], (wert + 1));
 			}
 		}
-		System.out.println("Je " + anzahlWerte + " Spielkarten fuer " + anzahlFarben + " Spieler zeugt");
+		System.out.println("Je " + anzahlWerte + " Spielkarten fuer bis zu " + anzahlFarben + " Spieler erzeugt");
 	}
 
 	public void listeSpielstand() {
@@ -192,13 +194,16 @@ public class YoolooKartenspiel {
 		return gewinnerIndex;
 	}
 	
-   public String getSpielname() {
-   return Spielname;
-}
+   	public String getSpielname() {
+		return Spielname;
+	}
 
-public void setSpielname(String spielname) {
-   Spielname = spielname;
-}
- 
+	public void setSpielname(String spielname) {
+   		Spielname = spielname;
+	}
+
+	public ArrayList<YoolooSpieler> getSpielerliste() {
+		return this.spielerliste;
+	}
 
 }

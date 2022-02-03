@@ -6,16 +6,17 @@ package common;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import common.YoolooKartenspiel.Kartenfarbe;
 
-public class YoolooSpieler implements Serializable {
+public class YoolooSpieler implements Serializable,  Comparable<YoolooSpieler> {
 
 	private static final long serialVersionUID = 376078630788146549L;
 	private String name;
 	private Kartenfarbe spielfarbe;
 	private int clientHandlerId = -1;
-	private int punkte;
+	private int punkte = 0;
 	private YoolooKarte[] aktuelleSortierung;
 
 	public YoolooSpieler(String name, int maxKartenWert) {
@@ -25,17 +26,41 @@ public class YoolooSpieler implements Serializable {
 		this.aktuelleSortierung = new YoolooKarte[maxKartenWert];
 	}
 
-	// Sortierung wird zufuellig ermittelt
+	@Override
+	public int compareTo(YoolooSpieler e) {
+		return this.getPunkte() - e.getPunkte();
+	}
+
+	// Standardsortierungen (Zufällige Auswahl zwischen mehreren Strategien)
 	public void sortierungFestlegen() {
 		YoolooKarte[] neueSortierung = new YoolooKarte[this.aktuelleSortierung.length];
-		for (int i = 0; i < neueSortierung.length; i++) {
-			int neuerIndex = (int) (Math.random() * neueSortierung.length);
-			while (neueSortierung[neuerIndex] != null) {
-				neuerIndex = (int) (Math.random() * neueSortierung.length);
-			}
-			neueSortierung[neuerIndex] = aktuelleSortierung[i];
-			// System.out.println(i+ ". neuerIndex: "+neuerIndex);
+		int r = (int) (Math.random() * (4 - 1)) + 1;
+		switch(r){
+			case 1:
+				for (int i = 0; i < neueSortierung.length; i++) {
+					int neuerIndex = (int) (Math.random() * neueSortierung.length);
+					while (neueSortierung[neuerIndex] != null) {
+						neuerIndex = (int) (Math.random() * neueSortierung.length);
+					}
+					neueSortierung[neuerIndex] = aktuelleSortierung[i];
+				}
+				break;
+			case 2:
+				common.YoolooKartenspiel.Kartenfarbe currentcolor= aktuelleSortierung[0].getFarbe();
+				for(int i = 0; i < neueSortierung.length; i++){
+					neueSortierung[i] = new YoolooKarte(currentcolor, i+1);
+				}
+				break;
+			case 3:
+				common.YoolooKartenspiel.Kartenfarbe mycolor= aktuelleSortierung[0].getFarbe();
+				for(int i = 0; i < neueSortierung.length; i++){
+					neueSortierung[i] = new YoolooKarte(mycolor, 10-i);
+				}
+				break;
+					
 		}
+		
+
 		aktuelleSortierung = neueSortierung;
 	}
 
