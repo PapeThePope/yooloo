@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,6 +17,7 @@ import common.YoolooKartenspiel;
 
 public class YoolooServer {
 
+	private final Dictionary<String, Integer> hashtable = new Hashtable<>();
 	// Server Standardwerte koennen ueber zweite Konstruktor modifiziert werden!
 	private int port = 44137;
 	private int spielerProRunde = 8; // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
@@ -93,6 +96,7 @@ public class YoolooServer {
 						spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
 					}
 
+
 					// nuechste Runde eroeffnen
 					clientHandlerList = new ArrayList<YoolooClientHandler>();
 				}
@@ -105,6 +109,12 @@ public class YoolooServer {
 
 	}
 
+	public void Insert(String name, int value){
+		Integer prevValue = hashtable.get(name);
+		if (prevValue == null)
+			prevValue = 0;
+		hashtable.put(name, prevValue + value);
+	}
 	// TODO Dummy zur Serverterminierung noch nicht funktional
 	public void shutDownServer(int code) {
 		if (code == 543210) {
