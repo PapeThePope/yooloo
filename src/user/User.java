@@ -14,12 +14,7 @@ public class User implements Serializable {
     private int points_total;
 
     public User( String name ) {
-        this.name = name;
-        this.sorting = null;
-        this.games_played = 0;
-        this.games_won = 0;
-        this.highscore = 0;
-        this.points_total = 0;
+        this( name, null );
     }
 
     public User( String name, YoolooKarte[] sorting ) {
