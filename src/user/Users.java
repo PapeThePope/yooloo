@@ -7,8 +7,12 @@ public class Users {
 
     private static final String FILE_PATH = "./users.txt";
 
+    private static HashMap<String, User> cached_users = new HashMap<>();
+
     public static User getUser( String name ) {
-        HashMap<String, User> cached_users = getUsers();
+        if ( cached_users.isEmpty() ) {
+            cached_users = getUsers();
+        }
 
         if( cached_users.containsKey( name ) ) {
             return cached_users.get( name );
@@ -18,7 +22,9 @@ public class Users {
     }
 
     public static void updateUser( User user ) {
-        HashMap<String, User> cached_users = getUsers();
+        if ( cached_users.isEmpty() ) {
+            cached_users = getUsers();
+        }
 
         cached_users.put( user.getName(), user);
 

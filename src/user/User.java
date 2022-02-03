@@ -8,20 +8,26 @@ public class User implements Serializable {
 
     private final String name;
     private YoolooKarte[] sorting;
-    private int points_max;
+    private int games_played;
+    private int games_won;
+    private int highscore;
     private int points_total;
 
     public User( String name ) {
         this.name = name;
         this.sorting = null;
-        this.points_max = 0;
+        this.games_played = 0;
+        this.games_won = 0;
+        this.highscore = 0;
         this.points_total = 0;
     }
 
     public User( String name, YoolooKarte[] sorting ) {
         this.name = name;
         this.sorting = sorting;
-        this.points_max = 0;
+        this.games_played = 0;
+        this.games_won = 0;
+        this.highscore = 0;
         this.points_total = 0;
     }
 
@@ -37,8 +43,16 @@ public class User implements Serializable {
         return this.sorting;
     }
 
-    public int getPointsMax() {
-        return this.points_max;
+    public int getGamesPlayed() {
+        return this.games_played;
+    }
+
+    public int getGamesWon() {
+        return this.games_won;
+    }
+
+    public int getHighscore() {
+        return this.highscore;
     }
 
     public int getPointsTotal() {
@@ -49,12 +63,24 @@ public class User implements Serializable {
         this.sorting = sorting;
     }
 
-    public void setPointsMax( int max ) {
-        this.points_max = max;
+    public void setHighscore( int max ) {
+        this.highscore = max;
     }
 
-    public void incrPointsMax( int increment ) {
-        this.points_max += increment;
+    public void setGamesPlayed( int games_played ) {
+        this.games_played = games_played;
+    }
+
+    public void incrGamesPlayed( int increment ) {
+        this.games_played += increment;
+    }
+
+    public void setGamesWon( int games_won ) {
+        this.games_won = games_won;
+    }
+
+    public void incrGamesWon( int increment ) {
+        this.games_won += increment;
     }
 
     public void setPointsTotal( int total ) {

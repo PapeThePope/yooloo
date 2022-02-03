@@ -23,6 +23,8 @@ import messages.ClientMessage;
 import messages.ServerMessage;
 import messages.ServerMessage.ServerMessageResult;
 import messages.ServerMessage.ServerMessageType;
+import user.User;
+import user.Users;
 
 public class YoolooClientHandler extends Thread {
 
@@ -120,6 +122,37 @@ public class YoolooClientHandler extends Thread {
 							// Stich an Client uebermitteln
 							oos.writeObject(currentstich);
 						}
+
+						int points = meinSpieler.getPunkte();
+						boolean isWinner = true;
+
+						for( YoolooSpieler player : this.session.getAktuellesSpiel().getSpielerliste() ) {
+							if ( player.getPunkte() > points )
+								isWinner = false;
+						}
+
+						User user = Users.getUser( meinSpieler.getName() );
+						user.incrGamesPlayed( 1 );
+
+						if ( points > user.getHighscore() ) {
+							user.setHighscore( points );
+						}
+
+						user.incrPointsTotal( points );
+
+						if ( isWinner )
+							user.incrGamesWon( 1 );
+
+						Users.updateUser( user );
+
+						System.out.println( "\n" );
+						System.out.println( "Player Stats - " + meinSpieler.getName() + ":" );
+						System.out.println( "Games played: " + user.getGamesPlayed() );
+						System.out.println( "Games won: " + user.getGamesWon() );
+						System.out.println( "Points gained: " + user.getPointsTotal() );
+						System.out.println( "Highscore: " + user.getHighscore() );
+						System.out.println( "\n" );
+
 						this.state = ServerState.ServerState_DISCONNECT;
 						break;
 						case GAMEMODE_PLAY_LIGA:{
