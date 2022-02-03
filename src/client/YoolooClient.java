@@ -194,8 +194,12 @@ public class YoolooClient {
 		}
 		System.out.println("[Client] Serversocket eingerichtet: " + serverSocket.toString());
 		// Kommunikationskanuele einrichten
+		if(ois == null){
 		ois = new ObjectInputStream(serverSocket.getInputStream());
+		}
+		if(oos ==null){
 		oos = new ObjectOutputStream(serverSocket.getOutputStream());
+		}
 	}
 
 	private void spieleStich(int stichNummer) throws IOException {
