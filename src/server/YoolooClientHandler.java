@@ -103,6 +103,17 @@ public class YoolooClientHandler extends Thread {
 						break;
 					}
 				case ServerState_PLAY_SESSION:
+
+					int without_duplicates = ( int ) this.session.getAktuellesSpiel().getSpielerliste()
+							.stream().map( YoolooSpieler::getName ).distinct().count();
+
+					if( without_duplicates < this.session.getAktuellesSpiel().getSpielerliste().size() ) {
+						System.out.println( "Jeder Spieler darf maximal einmal dem Spiel beitreten!" );
+						sendeKommando(ServerMessageType.SERVERMESSAGE_CHANGE_STATE, ClientState.CLIENTSTATE_DISCONNECTED,  null);
+						this.state = ServerState.ServerState_DISCONNECTED;
+						break;
+					}
+
 					switch (session.getGamemode()) {
 					case GAMEMODE_SINGLE_GAME:
 						// Triggersequenz zur Abfrage der einzelnen Karten des Spielers
