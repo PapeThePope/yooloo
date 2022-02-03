@@ -87,7 +87,6 @@ public class YoolooServer {
 						YoolooKartenspiel.Kartenfarbe.values().length)) {
 					// Init Session
 					YoolooSession yoolooSession = new YoolooSession(clientHandlerList.size(), serverGameMode);
-
 					// Starte pro Client einen ClientHandlerTread
 					for (int i = 0; i < clientHandlerList.size(); i++) {
 						YoolooClientHandler ch = clientHandlerList.get(i);
@@ -95,8 +94,6 @@ public class YoolooServer {
 						ch.joinSession(yoolooSession);
 						spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
 					}
-
-
 					// nuechste Runde eroeffnen
 					clientHandlerList = new ArrayList<YoolooClientHandler>();
 				}
