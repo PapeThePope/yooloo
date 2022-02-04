@@ -148,8 +148,10 @@ public class YoolooClientHandler extends Thread {
                                 boolean isWinner = true;
 
                                 for (YoolooSpieler player : this.session.getAktuellesSpiel().getSpielerliste()) {
-                                    if (player.getPunkte() > points)
+                                    if (player.getPunkte() > points) {
                                         isWinner = false;
+                                        break;
+                                    }
                                 }
 
                                 User user = Users.getUser(meinSpieler.getName());
@@ -169,10 +171,9 @@ public class YoolooClientHandler extends Thread {
                                 System.out.println("Player Stats - " + meinSpieler.getName() + ":");
                                 System.out.println("Games played: " + user.getGamesPlayed());
                                 System.out.println("Games won: " + user.getGamesWon());
-                                System.out.println("Points gained: " + user.getPointsTotal());
+                                System.out.println("Total points gained: " + user.getPointsTotal());
                                 System.out.println("Highscore: " + user.getHighscore());
                                 System.out.println("\n");
-
 
                                 this.state = ServerState_DISCONNECT;
                                 break;
