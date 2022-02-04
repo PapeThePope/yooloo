@@ -19,6 +19,7 @@ public class LeagueMode {
         this.players.addAll(InitialPlayers);
         hinrunde = new Ligarunde(players);
         rueckrunde = new Ligarunde(players);
+        leagueModeLogger = Logger.getLogger("liga");
     }
     public LeagueMode(List<YoolooClientHandler> InitialPlayers, int i, Logger logger) {
         this.clientHandlerList = InitialPlayers;
