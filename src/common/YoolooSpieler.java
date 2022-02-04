@@ -36,6 +36,7 @@ public class YoolooSpieler implements Serializable,  Comparable<YoolooSpieler> {
 		YoolooKarte[] neueSortierung = new YoolooKarte[this.aktuelleSortierung.length];
 		int r = (int) (Math.random() * (4 - 1)) + 1;
 		switch(r){
+			//Random
 			case 1:
 				for (int i = 0; i < neueSortierung.length; i++) {
 					int neuerIndex = (int) (Math.random() * neueSortierung.length);
@@ -45,12 +46,14 @@ public class YoolooSpieler implements Serializable,  Comparable<YoolooSpieler> {
 					neueSortierung[neuerIndex] = aktuelleSortierung[i];
 				}
 				break;
+			// 1-10
 			case 2:
 				common.YoolooKartenspiel.Kartenfarbe currentcolor= aktuelleSortierung[0].getFarbe();
 				for(int i = 0; i < neueSortierung.length; i++){
 					neueSortierung[i] = new YoolooKarte(currentcolor, i+1);
 				}
 				break;
+			// 10-1
 			case 3:
 				common.YoolooKartenspiel.Kartenfarbe mycolor= aktuelleSortierung[0].getFarbe();
 				for(int i = 0; i < neueSortierung.length; i++){

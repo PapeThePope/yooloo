@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -19,6 +21,7 @@ import modules.Matchup;
 
 public class YoolooServer {
 
+	private final Dictionary<String, Integer> hashtable = new Hashtable<>();
     // Server Standardwerte koennen ueber zweite Konstruktor modifiziert werden!
     private int port = 44137;
     private int spielerProRunde = 8; // min 1, max Anzahl definierte Farben in Enum YoolooKartenSpiel.KartenFarbe)
@@ -97,46 +100,51 @@ public class YoolooServer {
                 // Neue Session starten wenn ausreichend Spieler verbunden sind!
                 if (clientHandlerList.size() >= Math.min(spielerProRunde,
                         YoolooKartenspiel.Kartenfarbe.values().length)) {
+
+                    YoolooSession yoolooSession;
                     // Init Session
-                    YoolooSession yoolooSession = new YoolooSession(clientHandlerList.size(), serverGameMode, logger);
-                    
+                    if (serverGameMode != GameMode.GAMEMODE_SINGLE_GAME) {
+                        yoolooSession = new YoolooSession(2,serverGameMode, logger);
+                    } else {
+                        yoolooSession = new YoolooSession(clientHandlerList.size(), serverGameMode, logger);
+                    }
                     logger.info("Neue Session beginnt mit " + clientHandlerList.size() + " Spielern");
                     
-                    if (serverGameMode == GameMode.GAMEMODE_SINGLE_GAME)
                         // Starte pro Client einen ClientHandlerTread
-                    	logger.info("Einfaches Spiel wird erstellt");
-                    	for (int i = 0; i < clientHandlerList.size(); i++) {
+                    if (serverGameMode == GameMode.GAMEMODE_SINGLE_GAME) {
+                        logger.info("Einfaches Spiel wird erstellt");
+                        for (int i = 0; i < clientHandlerList.size(); i++) {
                             YoolooClientHandler ch = clientHandlerList.get(i);
                             ch.setHandlerID(i);
                             ch.joinSession(yoolooSession);
                             logger.info("Spieler tritt der Session bei");
                             spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
                         }
-                    if (serverGameMode == GameMode.GAMEMODE_PLAY_LIGA) {
-                        for (int i = 0; i < clientHandlerList.size(); i++) {
+                    }
+
+                    if(serverGameMode == GameMode.GAMEMODE_PLAY_LIGA){
+                        for (int j = 0; j< clientHandlerList.size(); j++){
+                        yoolooSession = new YoolooSession(2, serverGameMode, logger);
+                        for (int i = 0; i < 2; i++) {
                             YoolooClientHandler ch = clientHandlerList.get(i);
                             ch.setHandlerID(i);
                             ch.joinSession(yoolooSession);
-                            LeagueMode liga = new LeagueMode(clientHandlerList, 0, logger);
-                            logger.info("Ligamodus wird erstellt");
-                            
-                            for (Matchup matchup : liga.hinrunde.Matchups
-                            ) {
-                                currentMatchup = matchup;
-                                spielerPool.execute(ch);
-                            }
-                            for (Matchup matchup : liga.rueckrunde.Matchups
-                            ) {
-                                currentMatchup = matchup;
-                                spielerPool.execute(ch);
-                            }
+                            logger.info("Spieler tritt der Session bei");
+                            spielerPool.execute(ch); // Start der ClientHandlerThread - Aufruf der Methode run()
+                        }
+                        while(clientHandlerList.get(0).GetServerState() != YoolooClientHandler.ServerState.ServerState_DISCONNECTED){
+                            //Wait for clients to be disconnected
                         }
                     }
+                    }
+
+
+
                     // nuechste Runde eroeffnen
                     clientHandlerList = new ArrayList<YoolooClientHandler>();
-                    logger.info("Nächste Runde wird eröffnet");
-                }
-            }
+                    logger.info("Nï¿½chste Runde wird erï¿½ffnet");
+                }}
+
         } catch (IOException e1) {
             System.out.println("ServerSocket nicht gebunden");
             logger.warning("ServerSocket nicht gebunden");
@@ -146,6 +154,12 @@ public class YoolooServer {
 
     }
 
+	public void Insert(String name, int value){
+		Integer prevValue = hashtable.get(name);
+		if (prevValue == null)
+			prevValue = 0;
+		hashtable.put(name, prevValue + value);
+	}
     // TODO Dummy zur Serverterminierung noch nicht funktional
     public void shutDownServer(int code, Logger logger) {
         if (code == 543210) {
